@@ -1,0 +1,28 @@
+Recursos:
+
+1. Leitura de texto: utiliza a API Speech Synthesis para ler o texto inserido pelo usuário.
+2. Controle de velocidade: permite ajustar a velocidade da leitura.
+3. Pausar e retomar leitura: permite pausar e retomar a leitura.
+4. Resumo de texto: gera um resumo do texto inserido.
+5. Leitura do resumo: permite ler o resumo gerado.
+
+Estrutura:
+
+1. HTML: define a estrutura da página, incluindo um cabeçalho, uma seção para inserir texto, botões para controle de leitura e resumo, e um rodapé.
+2. CSS: define o estilo da página, incluindo cores, fontes e layout.
+3. JavaScript: implementa a lógica para os recursos de leitura e resumo.
+
+Funções JavaScript:
+
+1. lerTexto(): lê o texto inserido pelo usuário.
+2. pausarLeitura(): pausa a leitura.
+3. acelerarLeitura(): acelera a leitura.
+4. diminuirVelocidade(): diminui a velocidade da leitura.
+5. fazerResumo(): gera um resumo do texto inserido.
+6. leituraResumo(): lê o resumo gerado.
+
+Observações:
+
+1. O código utiliza a API Speech Synthesis, que é suportada pela maioria dos navegadores modernos.
+2. O código não inclui recursos de acessibilidade para pessoas com deficiência visual, como leitura de imagem ou reconhecimento de texto.
+3. O resumo de texto é gerado simplesmente selecionando as três primeiras frases do texto inserido. Isso pode não ser suficiente para textos mais complexos.
