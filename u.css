@@ -1,0 +1,9 @@
+#logo {
+    width: 800px; /* Aumentei o tamanho da logo */
+    height: 800px; /* Mantive a proporção */
+    border-radius: 100%;
+    background-image: url('Design_sem_nome-removebg-preview.png');
+    background-size: contain; /* Mantém a proporção da imagem */
+    background-repeat: no-repeat;
+    background-position: center;
+}

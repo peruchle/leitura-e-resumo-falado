@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitura Assistida e Resumo para Dislexia</title>
+
+    <!-- Fonte Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #F5F5DC, #E3D5C5, #D3BFA7, #C2AC96);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #logo {
+            width: 600px;
+            height: 300px;
+            object-fit: contain;
+        }
+
+        section {
+            flex: 1;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button {
+            background-color: #FFA500;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-right: 10px;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button:hover {
+            background-color: #D3D3D3;
+            color: #333;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .speed-display {
+            font-weight: bold;
+            color: white;
+        }
+
+        .motivational-message {
+            font-size: 18px;
+            font-weight: bold;
+            color: green;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Leitura e Resumo Falado</h1>
+    <img id="logo" src="Design_sem_nome-removebg-preview.png" alt="Logo">
+</header>
+
+<section>
+    <textarea id="userInput" placeholder="Digite seu texto aqui..."></textarea><br>
+    <div>
+        <button ondblclick="lerTexto()">Ler Texto</button>
+        <button onclick="pausarLeitura()">Pausar Leitura</button>
+        <button onclick="acelerarLeitura()">Acelerar Leitura</button>
+        <button onclick="diminuirVelocidade()">Diminuir Velocidade</button>
+        <button onclick="fazerResumo()">Fazer Resumo</button>
+        <span class="speed-display" id="velocidadeLeitura">Velocidade: 1x</span>
+    </div>
+    <div id="output" class="output"></div>
+</section>
+
+<footer>
+    <p>© 2024 Assistente de Leitura e Resumo - Facilitar a compreensão é nossa missão.</p>
+</footer>
+
+<script>
+    let leitura = null;
+    let velocidade = 1;
+    let textoRestante = '';
+
+    function lerTexto() {
+        const texto = textoRestante || document.getElementById('userInput').value;
+        if (leitura) {
+            window.speechSynthesis.resume();
+        } else {
+            leitura = new SpeechSynthesisUtterance(texto);
+            leitura.lang = 'pt-BR';
+            leitura.rate = velocidade;
+            leitura.onboundary = function(event) {
+                textoRestante = texto.slice(event.charIndex);
+            };
+            leitura.onend = function() {
+                leitura = null;
+                textoRestante = '';
+            };
+            window.speechSynthesis.speak(leitura);
+        }
+    }
+
+    function pausarLeitura() {
+        if (leitura) {
+            window.speechSynthesis.pause();
+        }
+    }
+
+    function acelerarLeitura() {
+        if (velocidade < 3) {
+            velocidade += 0.5;
+            document.getElementById('velocidadeLeitura').innerText = `Velocidade: ${velocidade}x`;
+        }
+        ajustarVelocidade();
+    }
+
+    function diminuirVelocidade() {
+        if (velocidade > 0.5) {
+            velocidade -= 0.5;
+            document.getElementById('velocidadeLeitura').innerText = `Velocidade: ${velocidade}x`;
+        }
+        ajustarVelocidade();
+    }
+
+    function ajustarVelocidade() {
+        if (leitura) {
+            window.speechSynthesis.pause();
+            leitura.rate = velocidade;
+            window.speechSynthesis.resume();
+        }
+    }
+
+    function fazerResumo() {
+        const texto = document.getElementById('userInput').value;
+        const frases = texto.split('. ');
+        const resumo = frases.slice(0, Math.min(frases.length, 3)).join('. ') + '.';
+        const mensagemMotivacional = "Continue acreditando no seu potencial! Você é capaz de superar qualquer desafio.";
+        document.getElementById('output').innerHTML = `
+            <div>
+                <h3>Resumo:</h3>
+                <p>${resumo}</p>
+                <div class="motivational-message">${mensagemMotivacional}</div>
+                <div>
+                    <button onclick="lerResumo()">Ler Resumo</button>
+                    <button onclick="pausarLeitura()">Pausar Resumo</button>
+                    <button onclick="acelerarLeitura()">Acelerar Resumo</button>
+                    <button onclick="diminuirVelocidade()">Diminuir Velocidade do Resumo</button>
+                </div>
+            </div>
+        `;
+        leituraResumo(resumo);
+    }
+
+    function leituraResumo(textoResumo) {
+        if (leitura) {
+            window.speechSynthesis.cancel();
+        }
+        leitura = new SpeechSynthesisUtterance(textoResumo);
+        leitura.lang = 'pt-BR';
+        leitura.rate = velocidade;
+        window.speechSynthesis.speak(leitura);
+    }
+
+    function lerResumo() {
+        const textoResumo = document.querySelector("#output p").innerText;
+        leituraResumo(textoResumo);
+    }
+</script>
+
+
+
+
+</body>
+</html>
